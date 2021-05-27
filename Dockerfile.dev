@@ -1,0 +1,22 @@
+FROM node:14
+ENV PORT 3000
+# Create app directory
+RUN mkdir -p /usr/src/app
+WORKDIR /usr/src/app
+
+# add `/app/node_modules/.bin` to $PATH
+ENV PATH /usr/src/app/node_modules/.bin:$PATH
+
+# Copying source files
+COPY package*.json /usr/src/app/
+COPY . /usr/src/app
+
+RUN npm install
+
+# Rebuild prisma for the correct platform
+RUN npm run generate
+
+# Building app
+EXPOSE 3000
+# Running the app
+CMD ["npm", "run", "dev"]
